@@ -1,0 +1,127 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #f0f2f5;
+  /* background: rgb(48,83,126);
+    background: linear-gradient(0deg, rgba(48,83,126,1) 0%, rgba(255,255,255,1) 100%); */
+  height: 100vh;
+}
+
+.content {
+  margin-top: -6rem;
+  text-align: center;
+  background: none;
+  background-color: transparent;
+  line-height: 1.1;
+}
+
+.content__title {
+  margin-top: -2rem;
+  margin-bottom: 1.3rem;
+}
+
+.content__intro {
+  display: inline-block;
+  width: 75ch;
+}
+
+#earth-container {
+  position: fixed;
+  width: 100%;
+  aspect-ratio: 1;
+  left: 0;
+  right: 0;
+  bottom: -170%;
+  animation: linear infinite 60s spin;
+}
+#earth {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+  z-index: -2;
+  -webkit-filter: drop-shadow(0px 0px 5em rgba(42, 127, 185, 0.75));
+  filter: drop-shadow(0px 0px 5em rgba(42, 127, 185, 0.75));
+}
+.pet-middle-base {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+  width: 12em;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.content__title h1 {
+  font-size: 8em;
+}
+.content__title img {
+  height: 8em;
+  margin-top: 10em;
+}
+
+#login-button {
+  display: inline-block;
+  background: rgb(226, 140, 0);
+  background: linear-gradient(
+    90deg,
+    rgba(226, 140, 0, 1) 0%,
+    rgba(236, 184, 0, 1) 100%
+  );
+  font-size: 2em;
+  font-family: "Inter";
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  margin-top: 1.2rem;
+  padding: 0.5em 1em 0.5em 1em;
+  border-radius: 15px;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+#login-button:after {
+  content: "";
+  position: absolute;
+  top: -110%;
+  left: -210%;
+  width: 200%;
+  height: 200%;
+  opacity: 0;
+  transform: rotate(30deg);
+
+  background: rgba(255, 255, 255, 0.13);
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.13) 0%,
+    rgba(255, 255, 255, 0.13) 77%,
+    rgba(255, 255, 255, 0.5) 92%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+#login-button:hover:after {
+  opacity: 1;
+  top: -30%;
+  left: 100%;
+  transition-property: left, top, opacity;
+  transition-duration: 0.7s, 0.7s, 0.15s;
+  transition-timing-function: ease;
+}
+#login-button:active:after {
+  opacity: 0;
+}

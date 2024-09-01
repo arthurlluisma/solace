@@ -1,0 +1,53 @@
+{% extends "solace/layout.html" %}
+{% load static %}
+{% block head %}
+    <link rel="stylesheet" href="{% static "solace/styles/landing.css" %}" type="text/css">
+{% endblock %}
+{% block body %}
+    <div class="content">
+        <div class="content__title">
+            <img src="{% static 'solace/images/SolaceLogo.png' %}" alt="Solace Logo">
+        </div>
+        <div class="content__intro">
+            <p>
+                Welcome to Solace. In today's fast paced world, we sometimes forget to take care of ourselves, especially our own mental health. Taking care of yourself can be tough, but what about taking care of someone else?
+            </p>
+            <p>
+                This is your virtual pet, he will be here for you when regardless of how you're feeling. He will remind you how to drink water, exercise, and take care of yourself.
+            </p>
+        </div>
+        <br>
+        <a href="{% url 'login' %}"><span id="login-button">Adopt a Pet</span></a>
+        <div id="earth-container">
+            <img src="{% static 'solace/images/earth.svg' %}" id="earth">
+        </div>
+    </div>
+    <script>
+        const skins =[
+        "{% static 'solace/sprites/Pet-Alice-Happy.gif' %}",
+        "{% static 'solace/sprites/Pet-Alice-Neutral.gif' %}",
+        "{% static 'solace/sprites/Pet-Alice-Sad.gif' %}",
+        "{% static 'solace/sprites/Pet-Bob-Happy.gif' %}",
+        "{% static 'solace/sprites/Pet-Bob-Neutral.gif' %}",
+        "{% static 'solace/sprites/Pet-Bob-Sad.gif' %}"
+        ];
+        
+        function createPets(rotate) {
+            var pet = document.createElement("img");
+            pet.className = "pet-middle-base";
+            var randNum = Math.floor(Math.random() * (47 - 36)) + 36;
+            var randHue = Math.floor(Math.random() * 360);
+            var randPet = Math.floor(Math.random() * 5);
+            var randFlip = Math.floor(Math.random() * 2) * 2 - 1;
+            pet.src = skins[randPet];
+            pet.style = `transform: rotate(${rotate}deg) translate(0, -${randNum}vw) scaleX(${randFlip}); filter: hue-rotate(${randHue}deg);`;
+            document.getElementById("earth-container").append(pet);
+        }
+        
+        var n = 16;
+        for (i = 0; i < n; i++) {
+            var randRotate = Math.floor(Math.random() * 16) - 8;
+            createPets(360 / n * i + randRotate);
+        }          
+    </script>
+{% endblock %}

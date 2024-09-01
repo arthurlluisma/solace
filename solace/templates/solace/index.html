@@ -1,0 +1,149 @@
+{% extends "solace/layout.html" %}
+{% load static %}
+{% block head %}
+    <link rel="stylesheet" href="{% static '/solace/styles/index.css' %}">
+{% endblock %}
+{% block body %}
+    <div class="main"
+         style="background-image: url('{% static 'solace/images/temp-background.png' %}')">
+        <div class="missions">
+            <h2>Missions</h2>
+        </div>
+        <div class="pet">
+            <div class="petArea">
+                <img id="petImg" src="{% static 'solace/sprites/Pet-Bob-Sad.gif' %}">
+                <h2 id="petMood">Alice is feeling down.</h2>
+            </div>
+        </div>
+        <div class="friends">
+            <h2>Friends</h2>
+            <span id="addFriend-container">
+                <form id="searchUser-form" onsubmit="event.preventDefault(); searchUser();">
+                    <input type="text" placeholder="Search username." name="username">
+                    <img src="{% static 'solace/icons/AddFriend.png' %}"
+                         alt="Add Friend Button">
+                </form>
+            </span>
+            <div id="friendRequest-container"></div>
+            <div id="friendsList-container" class="scroll">
+                {% for friend in friends %}
+                    <span class="friendList-friend">
+                        <div class="pfp">
+                            <img src="{% static 'solace/sprites/Pet-Bob-Sad.gif' %}">
+                        </div>
+                        <div class="status">
+                            <div>{{ friend.username }}</div>
+                            <div>{{ friend.status }}</div>
+                        </div>
+                        <button class="sendLove">send love 💖</button>
+                    </span>
+                {% endfor %}
+            </div>
+        </div>
+        <div id="daily-checkup-container">
+            <div id="emotionsPage">
+                <h2>Hey, How are you feeling today?</h2>
+                <div class="emotions" id="emoteImages">
+                    <img src="{% static 'solace/icons/depressed.png' %}">
+                    <img src="{% static 'solace/icons/sad.png' %}">
+                    <img src="{% static 'solace/icons/neutral.png' %}">
+                    <img src="{% static 'solace/icons/happy.png' %}">
+                    <img src="{% static 'solace/icons/ecstatic.png' %}">
+                </div>
+                <div class="emotions">
+                    <div>not doing too well...</div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div>i'm doing great!</div>
+                </div>
+            </div>
+            <div id="journalPage" class="pageDisabled">
+                <div>
+                    <h2>Would you like to write something down?</h2>
+                    <textarea style="width: 100%; height: 200px;"></textarea>
+                    <button onclick="journalSubmit()"> Submit Journal! </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if noPet %}
+        <div id="newPet-container">
+            <form id="petName" onsubmit="event.preventDefault(); sendName();">
+                <img src="" alt="" id="newPet-img">
+                <input type="text" placeholder="Name your pet." name="name" id="petname-input">
+                <input type="text"
+                       name="sprite"
+                       value=""
+                       id="newPet_sprite"
+                       style="display: none"
+                       hidden>
+                <input type="submit" style="display: none;" hidden>
+            </form>
+        </div>
+    {% endif %}
+    <script>
+        var petname = "{{pet.name}}" 
+        if (petname != "") {
+            document.getElementById('petMood').innerHTML = `${petname} is feeling down.`
+            document.getElementById('petImg').src = "{{pet.sprite}}"
+        }
+        const skins =[
+            "{% static 'solace/sprites/Pet-Alice-Sad.gif' %}",
+            "{% static 'solace/sprites/Pet-Bob-Sad.gif' %}"
+        ];
+        function pickRandomPet() {
+            var rand = Math.round(Math.random());
+            document.getElementById('newPet-img').src = skins[rand]
+            document.getElementById('petImg').src = skins[rand]
+            setTimeout(function() {
+                playSound("{% static 'solace/sounds/win.wav' %}")
+            }, 3000)
+        }
+        {% if noPet %}
+        pickRandomPet()
+        {% endif %}
+        function sendName() {
+            document.getElementById('newPet_sprite').value = document.getElementById('newPet-img').src
+            var formData = new FormData(document.getElementById('petName'));
+            fetch('createpet', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(result => {
+                petname = document.getElementById('petname-input').value
+                document.getElementById('petMood').innerHTML = `${petname} is feeling down.`
+                document.getElementById('newPet-container').style.display = 'none'
+            });
+        }
+        function searchUser() {
+            var formData = new FormData(document.getElementById('searchUser-form'));
+            fetch('searchapi', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(result => {
+                friendRequest_container = document.getElementById('friendRequest-container')
+                friendRequest_container.innerHTML = ''
+                requestSpan = document.createElement('span')
+                if (result.found == 'true') {
+                    requestSpan.innerHTML = `result.user.username<button id="addFriend" data-username>Add</button>`
+                } else {
+                    requestSpan.innerHTML = result.message
+                }
+                friendRequest_container.append(requestSpan)
+                console.log(result)
+            });
+        }
+        var sendloves = document.getElementsByClassName('sendLove')
+        for (i=0;i<sendloves.length;i++) {
+            sendloves[i].addEventListener('click', function(e) {
+                e.currentTarget.parentElement.getElementsByClassName('pfp')[0].getElementsByTagName('img')[0].style.animation = 'bounce-7 2s cubic-bezier(0.280, 0.840, 0.420, 1)'
+            })
+        }
+    </script>
+    <script src="{%static '/solace/scripts/index.js'%}" defer></script>
+{% endblock %}

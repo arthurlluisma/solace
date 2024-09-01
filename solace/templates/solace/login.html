@@ -1,0 +1,36 @@
+{% extends "solace/layout.html" %}
+{% load static %}
+{% block head %}
+    <link rel="stylesheet" href="{% static "solace/styles/login.css" %}" type="text/css">
+{% endblock %}
+{% block body %}
+    <div class="content">
+        <div id="content__form--login" class="content__form">
+            <h1>Login to Solace</h1>
+            {{ error }}
+            <form action="{% url 'login' %}" method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="text" placeholder="Username" name="username">
+                <input type="password" placeholder="Password" name="password">
+                <input type="text" name="method" value="l" style="display: none;">
+                <button type="submit">Login</button>
+            </form>
+            <span id="content__form__btn--login">Don't have an account? Register</span>
+        </div>
+        <div id="content__form--register" class="content__form">
+            <h1>Register to Solace</h1>
+            {{ error }}
+            <form action="{% url 'login' %}" method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="text" placeholder="Username" name="username">
+                <input type="password" placeholder="Password" name="password">
+                <input type="text" name="method" value="r" style="display: none;">
+                <button type="submit">Register</button>
+            </form>
+            <span id="content__form__btn--register">Have an account? Login</span>
+        </div>
+    </div>
+    <script src="{% static 'solace/scripts/login.js' %}"></script>
+{% endblock %}
